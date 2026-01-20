@@ -12,10 +12,11 @@ namespace Employee.api.Controllers
         {
             _context = context;
         }
-
+        
         [HttpGet]
         public IActionResult GetAllDepartments()
         {
+            //get all departments data
             var departments = _context.Departments.ToList();
             return Ok(departments);
         }
