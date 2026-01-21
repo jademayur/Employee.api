@@ -25,5 +25,17 @@ namespace Employee.api.Model
         public DateTime createdDate { get; set; }
         public DateTime modifiedDate { get; set; }
 
+        public string role { get; set; } = string.Empty;
+
+    }
+
+
+    public class LoginDto
+    {
+        [Required]
+        public string email { get; set; } = string.Empty;
+
+        [Required]
+        public string contactNo { get; set; } = string.Empty;
     }
 }
