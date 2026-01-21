@@ -20,7 +20,7 @@ namespace Employee.api.Controllers
             var designations = _context.Designations.ToList();
             return Ok(designations);
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult GetDesignationById(int id)
         {
             var designation = _context.Designations.Find(id);

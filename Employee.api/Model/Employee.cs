@@ -18,12 +18,12 @@ namespace Employee.api.Model
         public string city { get; set; } = string.Empty;
         [Required, MaxLength(6)]
         public string pincode { get; set; } = string.Empty;
-        public string altContactNo { get; set; } 
+        public string? altContactNo { get; set; } 
         [Required, MaxLength(2000)]
         public string address { get; set; } = string.Empty;
         public int designationId { get; set; }
-        public DateTime createdDate { get; set; }
-        public DateTime modifiedDate { get; set; }
+        public DateTime? createdDate { get; set; }
+        public DateTime? modifiedDate { get; set; }
 
         public string role { get; set; } = string.Empty;
 

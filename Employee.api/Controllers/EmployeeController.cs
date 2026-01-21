@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Employee.api.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,7 @@ namespace Employee.api.Controllers
             var employees = _context.Employees.ToList();
             return Ok(employees);
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult GetEmployeeById(int id) 
         {
                 var employee = _context.Employees.Find(id);
@@ -42,7 +43,7 @@ namespace Employee.api.Controllers
             _context.SaveChanges();
             return Ok(new { Message =  "Employee Save Successfully" , Data = employee});
         }
-        [HttpPost]
+        [HttpPut("{id}")]
         public IActionResult UpdateEmployee(int id, Model.Employee employee)
         {
             var emp = _context.Employees.Find(id);
@@ -72,7 +73,7 @@ namespace Employee.api.Controllers
             return Ok(new { Message = "Employee Updated Successfully", Data = employee });
         }
 
-        [HttpGet]
+        [HttpGet("filter")]
         public async Task<IActionResult> Filter( string? search, int? designation, string? sortBy = "name", string? sortDir = "asc", int pageNo = 1, int pageSize = 25 )
         {
             var query = _context.Employees.AsQueryable();
@@ -128,17 +129,23 @@ namespace Employee.api.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(Model.LoginDto loginDto)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
             var employee = await _context.Employees
-                .FirstOrDefaultAsync(e => e.email.ToLower() == loginDto.email.ToLower() 
+                .FirstOrDefaultAsync(e => e.email == loginDto.email
                                        && e.contactNo == loginDto.contactNo);
             if (employee == null)
             {
                 return Unauthorized(new { Message = "Invalid Email or Contact Number" });
             }
-            return Ok(new { Message = "Login Successful", Data = new
+            return Ok(new { Message = "Login Successful", data = new
             {
                 employee.employeeId,
                 employee.name,
