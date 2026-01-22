@@ -14,7 +14,7 @@ namespace Employee.api.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllDepartments")]
         public IActionResult GetAllDepartments()
         {
             //get all departments data
@@ -22,7 +22,7 @@ namespace Employee.api.Controllers
             return Ok(departments);
         }
 
-        [HttpPost]
+        [HttpPost("AddDepartment")]
         public IActionResult AddDepartment(Department department)
         {
             bool exists = _context.Departments.Any(d => d.departmentName.ToLower() == department.departmentName.ToLower());
@@ -34,7 +34,7 @@ namespace Employee.api.Controllers
             return Ok("Department Save Successfully");
         }
 
-        [HttpPut]
+        [HttpPut("UpdateDepartment")]
         public IActionResult UpdateDepartment(Department department)
         {
             var dept = _context.Departments.Find(department.departmentId);
@@ -48,7 +48,7 @@ namespace Employee.api.Controllers
             return Ok("Department Updated Successfully");
         }
 
-        [HttpDelete]
+        [HttpDelete("DeleteDepartment/{id}")]
         public IActionResult DeleteDepartment(int id)
         {
             var dept = _context.Departments.Find(id);
