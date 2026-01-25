@@ -7,5 +7,6 @@ namespace Employee.api.Controllers
     [ApiController]
     public class LeaveApplicationController : ControllerBase
     {
+        //leave application controller implementation will be here
     }
 }

@@ -7,5 +7,6 @@ namespace Employee.api.Controllers
     [ApiController]
     public class LeaveBalanceController : ControllerBase
     {
+        //leave controller implementation will be here
     }
 }
