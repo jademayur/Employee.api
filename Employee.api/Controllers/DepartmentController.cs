@@ -8,6 +8,7 @@ namespace Employee.api.Controllers
     [ApiController]
     public class DepartmentController : ControllerBase
     {
+        //Department controller with CRUD operations
         private readonly Model.AppDbContext _context;
         public DepartmentController(Model.AppDbContext context)
         {

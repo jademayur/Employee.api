@@ -9,6 +9,7 @@ namespace Employee.api.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        //Employee controller with CRUD operations and filtering
         private readonly Model.AppDbContext _context;
         public EmployeeController(Model.AppDbContext context)
         {

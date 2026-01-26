@@ -7,6 +7,7 @@ namespace Employee.api.Controllers
     [ApiController]
     public class DesignationController : ControllerBase
     {
+        //designation controller with CRUD operations
         private readonly Model.AppDbContext _context;
         public DesignationController(Model.AppDbContext context)
         {
