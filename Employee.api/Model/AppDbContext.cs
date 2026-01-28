@@ -10,5 +10,7 @@ namespace Employee.api.Model
        public DbSet<Employee> Employees { get; set; }
        public DbSet<Department> Departments { get; set; }
        public DbSet<Designation> Designations { get; set; }
+       public DbSet<LeaveApplication> LeaveApplications { get; set; }
+       public DbSet<LeaveBalance> LeaveBalances { get; set; }
     }
 }
