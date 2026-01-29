@@ -29,7 +29,7 @@ namespace Employee.api.Controllers
             var leave = new LeaveApplication
             {
                 EmployeeId = dto.EmployeeId,
-                LeaveType = dto.LeaveType,
+                LeaveTypeId = dto.LeaveTypeId,
                 FromDate = dto.FromDate,
                 ToDate = dto.ToDate,
                 IsHalfDay = dto.IsHalfDay,
@@ -47,7 +47,7 @@ namespace Employee.api.Controllers
         public IActionResult LeaveAction([FromBody] LeaveActionDto dto)
         {
             var leave = _context.LeaveApplications
-                                .FirstOrDefault(x => x.LeaveId == dto.LeaveApplicationId);
+                                .FirstOrDefault(x => x.LeaveApplicationId == dto.LeaveApplicationId);
 
             if (leave == null)
                 return NotFound("Leave not found");
@@ -61,13 +61,13 @@ namespace Employee.api.Controllers
             {
                 var balance = _context.LeaveBalances.FirstOrDefault(x =>
                     x.EmployeeId == leave.EmployeeId &&
-                    x.LeaveType == leave.LeaveType);
+                    x.LeaveTypeId == leave.LeaveTypeId);
 
-                if (balance == null || balance.RemainingLeaves < leave.TotalDays)
+                if (balance == null || balance.AvailableLeaves < leave.TotalDays)
                     return BadRequest("Insufficient leave balance");
 
                 balance.UsedLeaves += leave.TotalDays;
-                balance.RemainingLeaves -= leave.TotalDays;
+                balance.AvailableLeaves -= leave.TotalDays;
             }
 
             _context.SaveChanges();
@@ -94,6 +94,62 @@ namespace Employee.api.Controllers
                 .ToList();
 
             return Ok(data);
+        }
+
+        [HttpGet("history/{employeeId}")]
+        public IActionResult GetEmployeeLeaveHistory(int employeeId)
+        {
+            var history = _context.LeaveApplications
+                .Where(x => x.EmployeeId == employeeId)
+                .OrderByDescending(x => x.AppliedDate)
+                .Select(x => new
+                {
+                    x.LeaveApplicationId,
+                    x.FromDate,
+                    x.ToDate,
+                    x.IsHalfDay,
+                    x.TotalDays,
+                    x.Status,
+                    x.Reason,
+                    x.AppliedDate,
+                    x.ApprovedDate,
+                    LeaveType = _context.LeaveTypes
+                        .Where(t => t.LeaveTypeId == x.LeaveTypeId)
+                        .Select(t => t.LeaveTypeName)
+                        .FirstOrDefault()
+                })
+                .ToList();
+
+            return Ok(history);
+        }
+
+        [HttpGet("team-history/{managerId}")]
+        public IActionResult GetTeamLeaveHistory(int managerId)
+        {
+            var data = _context.LeaveApplications
+                .Where(x => x.Status != "Pending")
+                .OrderByDescending(x => x.AppliedDate)
+                .ToList();
+
+            return Ok(data);
+        }
+
+        [HttpPost("cancel/{leaveId}")]
+        public IActionResult CancelLeave(int leaveId)
+        {
+            var leave = _context.LeaveApplications
+                .FirstOrDefault(x => x.LeaveApplicationId == leaveId);
+
+            if (leave == null)
+                return NotFound("Leave not found");
+
+            if (leave.Status != "Pending")
+                return BadRequest("Only pending leave can be cancelled");
+
+            leave.Status = "Cancelled";
+            _context.SaveChanges();
+
+            return Ok("Leave cancelled successfully");
         }
 
     }

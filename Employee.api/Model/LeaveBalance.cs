@@ -8,13 +8,14 @@ namespace Employee.api.Model
         public int LeaveBalanceId { get; set; }
 
         public int EmployeeId { get; set; }
-
-        [Required, MaxLength(20)]
-        public string LeaveType { get; set; } = string.Empty;
-        // Casual / Sick / Earned
+        public int LeaveTypeId { get; set; }
 
         public decimal TotalLeaves { get; set; }
         public decimal UsedLeaves { get; set; }
-        public decimal RemainingLeaves { get; set; }
+        public decimal AvailableLeaves { get; set; }
+
+        public int Year { get; set; }
+
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 }

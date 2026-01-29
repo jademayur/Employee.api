@@ -5,13 +5,13 @@ namespace Employee.api.Model
     public class LeaveApplication
     {
         [Key]
-        public int LeaveId { get; set; }
+        public int LeaveApplicationId { get; set; }
 
         [Required]
         public int EmployeeId { get; set; }
 
         [Required, MaxLength(20)]
-        public string LeaveType { get; set; } = string.Empty;
+        public int LeaveTypeId { get; set; }
 
         [Required]
         public DateTime FromDate { get; set; }
