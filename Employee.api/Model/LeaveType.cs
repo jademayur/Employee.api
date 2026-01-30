@@ -7,9 +7,11 @@ namespace Employee.api.Model
         [Key]
         public int LeaveTypeId { get; set; }
 
-        [MaxLength(50)]
+        [Required, MaxLength(50)]
         public string LeaveTypeName { get; set; } = string.Empty;
 
         public decimal DefaultLeaves { get; set; }
+
+        public bool IsActive { get; set; } = true;
     }
 }

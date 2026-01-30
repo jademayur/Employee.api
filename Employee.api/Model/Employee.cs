@@ -24,7 +24,7 @@ namespace Employee.api.Model
         public string city { get; set; } = string.Empty;
 
         [Required, MaxLength(50)]
-        public string State { get; set; } = string.Empty;
+        public string state { get; set; } = string.Empty;
 
         [Required, MaxLength(6)]
         public string pincode { get; set; } = string.Empty;
@@ -35,11 +35,11 @@ namespace Employee.api.Model
         public int designationId { get; set; }
 
         // 🔹 Leave Approval Hierarchy
-        public int? ManagerId { get; set; }
+        public int? managerId { get; set; }
 
         // 🔹 Employment Info
-        public DateTime DateOfJoining { get; set; }
-        public bool IsActive { get; set; } = true;
+        public DateTime? dateOfJoining { get; set; }  
+        public bool isActive { get; set; } = true;
 
         // 🔹 System Fields
         public string role { get; set; } = string.Empty;
