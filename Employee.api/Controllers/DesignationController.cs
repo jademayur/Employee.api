@@ -58,7 +58,7 @@ namespace Employee.api.Controllers
             _context.Add(designation);
             _context.SaveChanges();
 
-            return Ok(new { success = true, data = designation, message = "Designation Saved Successfully" });
+            return Ok(new { success = true, message = "Designation Save successfully" });
         }
 
         // ================= UPDATE DESIGNATION =================
@@ -74,7 +74,7 @@ namespace Employee.api.Controllers
             desig.departmentId = designation.departmentId;
             _context.SaveChanges();
 
-            return Ok(new { success = true, data = desig, message = "Designation Updated Successfully" });
+            return Ok(new { success = true, message = "Designation Update successfully" });
         }
 
         // ================= DELETE DESIGNATION =================
@@ -89,7 +89,7 @@ namespace Employee.api.Controllers
             _context.Designations.Remove(desig);
             _context.SaveChanges();
 
-            return Ok(new { success = true, message = "Designation Deleted Successfully" });
+            return Ok(new { success = true, message = "Designation Delete successfully" });
         }
     }
 

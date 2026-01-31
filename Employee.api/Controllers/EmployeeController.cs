@@ -42,7 +42,7 @@ namespace Employee.api.Controllers
              employee.createdDate = DateTime.Now;
             _context.Add(employee);
             _context.SaveChanges();
-            return Ok(new { Message =  "Employee Save Successfully" , Data = employee});
+            return Ok(new { success = true, message = "Employee Save successfully" });
         }
         [HttpPut("{id}")]
         public IActionResult UpdateEmployee(int id, Model.Employee employee)
@@ -71,7 +71,7 @@ namespace Employee.api.Controllers
             emp.modifiedDate = DateTime.Now;
             emp.role = employee.role;
             _context.SaveChanges();
-            return Ok(new { Message = "Employee Updated Successfully", Data = employee });
+            return Ok(new { success = true, message = "Employee Update successfully" });
         }
 
         [HttpGet("filter")]
@@ -157,6 +157,22 @@ namespace Employee.api.Controllers
                 employee.role
             }
             });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEmployee(int id)
+        {
+            var employee = await _context.Employees.FindAsync(id);
+
+            if (employee == null)
+            {
+                return NotFound(new { Message = "Employee Not Found" });
+            }
+
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "Employee deleted successfully" });
         }
     }
 }
