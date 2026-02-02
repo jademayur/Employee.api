@@ -1,4 +1,5 @@
-﻿using Employee.api.Model;
+﻿using Employee.api.DTOs;
+using Employee.api.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace Employee.api.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllEmployees")]
         public IActionResult GetAllEmployees()
         {
             //get all employees data
@@ -31,19 +32,24 @@ namespace Employee.api.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
         public IActionResult AddEmployee(Model.Employee employee)
         {
-            bool exists = _context.Employees.Any(e => e.email.ToLower() == employee.email.ToLower() || e.contactNo == employee.contactNo);
+            bool exists = _context.Employees.Any(e =>
+                e.email.ToLower() == employee.email.ToLower() || e.contactNo == employee.contactNo
+            );
 
-            if (!exists)
+            if (exists)
             {
                 return BadRequest(new { Message = "Employee with same Email or Contact Number already exists" });
             }
-             employee.createdDate = DateTime.Now;
+
+            employee.createdDate = DateTime.Now;
             _context.Add(employee);
             _context.SaveChanges();
-            return Ok(new { success = true, message = "Employee Save successfully" });
+            return Ok(new { success = true, message = "Employee saved successfully", data = employee });
         }
+
         [HttpPut("{id}")]
         public IActionResult UpdateEmployee(int id, Model.Employee employee)
         {
@@ -53,26 +59,38 @@ namespace Employee.api.Controllers
                 return NotFound(new { Message = "Employee Not Found" });
             }
 
-            bool exists = _context.Employees.Any(e => e.email.ToLower() == employee.email.ToLower() || e.contactNo == employee.contactNo && e.employeeId != id);
+            // Check if any other employee has same email or contactNo
+            bool exists = _context.Employees.Any(e =>
+                e.employeeId != id &&
+                (e.email.ToLower() == employee.email.ToLower() || e.contactNo == employee.contactNo)
+            );
 
-            if (!exists)
+            if (exists)
             {
                 return BadRequest(new { Message = "Employee with same Email or Contact Number already exists" });
             }
 
+            // Update fields
             emp.name = employee.name;
             emp.contactNo = employee.contactNo;
             emp.email = employee.email;
             emp.city = employee.city;
+            emp.state = employee.state;
             emp.pincode = employee.pincode;
             emp.altContactNo = employee.altContactNo;
             emp.address = employee.address;
             emp.designationId = employee.designationId;
-            emp.modifiedDate = DateTime.Now;
+            emp.managerId = employee.managerId;
             emp.role = employee.role;
+            emp.dateOfJoining = employee.dateOfJoining;
+            emp.modifiedDate = DateTime.Now;
+            emp.isActive = employee.isActive;
+
             _context.SaveChanges();
-            return Ok(new { success = true, message = "Employee Update successfully" });
+
+            return Ok(new { success = true, message = "Employee updated successfully" });
         }
+
 
         [HttpGet("filter")]
         public async Task<IActionResult> Filter( string? search, int? designation, string? sortBy = "name", string? sortDir = "asc", int pageNo = 1, int pageSize = 25 )
@@ -174,5 +192,15 @@ namespace Employee.api.Controllers
 
             return Ok(new { success = true, message = "Employee deleted successfully" });
         }
+
+        [HttpGet("GetManagers")]
+        public IActionResult GetManagers()
+        {
+            var managers = _context.Employees
+                .Where(e => e.role.ToLower() == "manager" && e.isActive)
+                .ToList();
+            return Ok(managers);
+
+        }
     }
-}
+}   

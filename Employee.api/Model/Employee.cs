@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Employee.api.Model
 {
-    [Table("employeeTbl")]
+  
     public class Employee
     {
         [Key]
@@ -11,6 +11,8 @@ namespace Employee.api.Model
 
         [Required, MaxLength(50)]
         public string name { get; set; } = string.Empty;
+
+        public DateTime? dateOfBirth { get; set; }
 
         [Required, MaxLength(10), MinLength(10)]
         public string contactNo { get; set; } = string.Empty;
@@ -48,12 +50,4 @@ namespace Employee.api.Model
     }
 
 
-    public class LoginDto
-    {
-        [Required]
-        public string email { get; set; } = string.Empty;
-
-        [Required]
-        public string contactNo { get; set; } = string.Empty;
-    }
 }

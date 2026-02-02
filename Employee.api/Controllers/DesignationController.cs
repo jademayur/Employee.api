@@ -29,7 +29,7 @@ namespace Employee.api.Controllers
                                    departmentName = dep.departmentName
                                };
 
-            return Ok(new { success = true, data = designations });
+            return Ok(designations);
         }
 
         // ================= GET DESIGNATION BY ID =================
@@ -41,7 +41,7 @@ namespace Employee.api.Controllers
             if (designation == null)
                 return NotFound(new { success = false, message = "Designation Not Found" });
 
-            return Ok(new { success = true, data = designation });
+            return Ok(designation);
         }
 
         // ================= ADD DESIGNATION =================
