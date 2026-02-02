@@ -31,8 +31,7 @@ namespace Employee.api.Controllers
                 return Ok(employee);
         }
 
-        [HttpPost]
-        [HttpPost]
+        [HttpPost]       
         public IActionResult AddEmployee(Model.Employee employee)
         {
             bool exists = _context.Employees.Any(e =>
@@ -41,7 +40,7 @@ namespace Employee.api.Controllers
 
             if (exists)
             {
-                return BadRequest(new { Message = "Employee with same Email or Contact Number already exists" });
+                return BadRequest(new { message = "Employee with same Email or Contact Number already exists" });
             }
 
             employee.createdDate = DateTime.Now;
@@ -72,6 +71,7 @@ namespace Employee.api.Controllers
 
             // Update fields
             emp.name = employee.name;
+            emp.dateOfBirth = employee.dateOfBirth;
             emp.contactNo = employee.contactNo;
             emp.email = employee.email;
             emp.city = employee.city;
