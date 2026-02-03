@@ -39,5 +39,7 @@ namespace Employee.api.Model
         public DateTime? ApprovedDate { get; set; }
 
         public DateTime AppliedDate { get; set; } = DateTime.Now;
+
+        public LeaveType LeaveType { get; set; }
     }
 }

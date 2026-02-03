@@ -2,6 +2,8 @@
 using Employee.api.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Employee.api.Controllers
 {
@@ -79,9 +81,21 @@ namespace Employee.api.Controllers
         public IActionResult GetEmployeeLeaves(int employeeId)
         {
             var data = _context.LeaveApplications
-                               .Where(x => x.EmployeeId == employeeId)
-                               .OrderByDescending(x => x.AppliedDate)
-                               .ToList();
+                      .Include(x => x.LeaveType)
+                      .Where(x => x.EmployeeId == employeeId)
+                      .OrderByDescending(x => x.AppliedDate)
+                      .Select(x => new
+                      {
+                          x.LeaveApplicationId,
+                          x.EmployeeId,
+                          x.AppliedDate,
+                          x.LeaveTypeId,
+                          LeaveTypeName = x.LeaveType.LeaveTypeName,
+                            x.FromDate,
+                            x.ToDate,
+                            x.Status
+                      })
+                      .ToList();
 
             return Ok(data);
         }

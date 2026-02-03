@@ -36,9 +36,9 @@ namespace Employee.api.Controllers
                 {
                     EmployeeId = dto.EmployeeId,
                     LeaveTypeId = type.LeaveTypeId,
-                    TotalLeaves = type.DefaultLeaves,
+                  //  TotalLeaves = type.DefaultLeaves,
                     UsedLeaves = 0,
-                    AvailableLeaves = type.DefaultLeaves,
+                 //   AvailableLeaves = type.DefaultLeaves,
                     Year = dto.Year
                 };
 

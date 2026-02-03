@@ -10,8 +10,7 @@ namespace Employee.api.Model
         [Required, MaxLength(50)]
         public string LeaveTypeName { get; set; } = string.Empty;
 
-        public decimal DefaultLeaves { get; set; }
-
         public bool IsActive { get; set; } = true;
+
     }
 }
