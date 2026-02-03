@@ -20,8 +20,35 @@ namespace Employee.api.Controllers
         [HttpGet("GetAllEmployees")]
         public IActionResult GetAllEmployees()
         {
-            //get all employees data
-            var employees = _context.Employees.ToList();
+            var employees = (
+          from e in _context.Employees
+          join d in _context.Designations
+              on e.designationId equals d.designationId
+          join m in _context.Employees
+              on e.managerId equals m.employeeId into mgr
+          from manager in mgr.DefaultIfEmpty()
+          select new
+          {
+              e.employeeId,
+              e.name,
+              e.dateOfBirth,
+              e.email,
+              e.contactNo,
+              e.altContactNo,
+              e.city,
+              e.state,
+              e.address,
+              e.pincode,
+              e.designationId,
+              DesignationName = d.designationName,
+              e.managerId,
+              ManagerName = manager != null ? manager.name : null,
+              e.role,
+              e.dateOfJoining,
+              e.isActive
+          }
+      ).ToList();
+
             return Ok(employees);
         }
         [HttpGet("{id}")]
@@ -54,22 +81,28 @@ namespace Employee.api.Controllers
         {
             var emp = _context.Employees.Find(id);
             if (emp == null)
-            {
                 return NotFound(new { Message = "Employee Not Found" });
-            }
 
-            // Check if any other employee has same email or contactNo
-            bool exists = _context.Employees.Any(e =>
-                e.employeeId != id &&
-                (e.email.ToLower() == employee.email.ToLower() || e.contactNo == employee.contactNo)
-            );
+            // Check for duplicates
+            var emailExists = _context.Employees.Any(e =>
+                e.employeeId != id && e.email.ToLower() == employee.email.ToLower());
 
-            if (exists)
-            {
-                return BadRequest(new { Message = "Employee with same Email or Contact Number already exists" });
-            }
+            var contactExists = _context.Employees.Any(e =>
+                e.employeeId != id && e.contactNo == employee.contactNo);
 
-            // Update fields
+            // Prepare error object
+            var errors = new Dictionary<string, string>();
+
+            if (emailExists)
+                errors.Add("email", "Email already exists");
+
+            if (contactExists)
+                errors.Add("contactNo", "Contact Number already exists");
+
+            if (errors.Count > 0)
+                return BadRequest(new { success = false, errors });
+
+            // Update employee fields
             emp.name = employee.name;
             emp.dateOfBirth = employee.dateOfBirth;
             emp.contactNo = employee.contactNo;
@@ -90,6 +123,7 @@ namespace Employee.api.Controllers
 
             return Ok(new { success = true, message = "Employee updated successfully" });
         }
+
 
 
         [HttpGet("filter")]
