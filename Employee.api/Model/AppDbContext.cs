@@ -13,5 +13,6 @@ namespace Employee.api.Model
        public DbSet<LeaveApplication> LeaveApplications { get; set; }
        public DbSet<LeaveBalance> LeaveBalances { get; set; }
        public DbSet<LeaveType> LeaveTypes { get; set; }
+       public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
     }
 }
