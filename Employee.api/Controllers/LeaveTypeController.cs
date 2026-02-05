@@ -16,7 +16,7 @@ namespace Employee.api.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
             return Ok(_context.LeaveTypes.Where(x => x.IsActive).ToList());

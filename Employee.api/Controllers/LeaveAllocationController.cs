@@ -73,7 +73,7 @@ namespace Employee.api.Controllers
             }
 
             _context.SaveChanges();
-            return Ok("Leave allocated successfully");
+            return Ok(new { success = true, message = "Leave allocation Save successfully" });
         }
 
         // ================= UPDATE =================
@@ -103,7 +103,7 @@ namespace Employee.api.Controllers
             }
 
             _context.SaveChanges();
-            return Ok("Leave allocation updated");
+            return Ok(new { success = true, message = "Leave allocation update successfully" });
         }
 
         // ================= DELETE =================
@@ -119,7 +119,7 @@ namespace Employee.api.Controllers
             _context.LeaveAllocations.Remove(allocation);
             _context.SaveChanges();
 
-            return Ok("Leave allocation deleted");
+            return Ok(new { success = true, message = "Leave allocation delete successfully" });
         }
 
     }
