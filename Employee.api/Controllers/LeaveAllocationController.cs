@@ -6,6 +6,7 @@ namespace Employee.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    // leave allocation controller will be here
     public class LeaveAllocationController : ControllerBase
     {
         private readonly AppDbContext _context;
