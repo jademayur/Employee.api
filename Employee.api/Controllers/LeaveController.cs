@@ -74,7 +74,7 @@ namespace Employee.api.Controllers
 
             _context.SaveChanges();
 
-            return Ok($"Leave {dto.Action}");
+            return Ok(new { success = true, message = "Leave allocation update successfully" });
         }
 
         [HttpGet("employee/{employeeId}")]
@@ -103,11 +103,27 @@ namespace Employee.api.Controllers
         [HttpGet("pending/{managerId}")]
         public IActionResult GetPendingLeaves(int managerId)
         {
-            var data = _context.LeaveApplications
-                .Where(x => x.Status == "Pending")
-                .ToList();
+            var leaves = (
+                 from l in _context.LeaveApplications
+                 join e in _context.Employees
+                     on l.EmployeeId equals e.employeeId
+                 join lt in _context.LeaveTypes
+                     on l.LeaveTypeId equals lt.LeaveTypeId                
+                 orderby l.FromDate descending
+                 select new LeaveApprovalListDto
+                 {
+                     LeaveApplicationId = l.LeaveApplicationId,
+                     EmployeeName = e.name,
+                     LeaveTypeName = lt.LeaveTypeName,
+                     FromDate = l.FromDate,
+                     ToDate = l.ToDate,
+                     TotalDays = l.TotalDays,
+                     Reason = l.Reason,
+                     Status = l.Status
+                 }
+             ).ToList();
 
-            return Ok(data);
+            return Ok(leaves);
         }
 
         [HttpGet("history/{employeeId}")]
@@ -165,6 +181,9 @@ namespace Employee.api.Controllers
 
             return Ok("Leave cancelled successfully");
         }
+       
+
 
     }
+
 }
